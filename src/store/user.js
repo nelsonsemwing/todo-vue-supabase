@@ -16,6 +16,9 @@ export const useUserStore = defineStore("user", {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
       });
 
       if (error) {
@@ -28,21 +31,17 @@ export const useUserStore = defineStore("user", {
     },
 
     async signIn(email, password) {
-      this.loading = true;
-      this.errorMessage = "";
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data, error } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
       if (error) {
         this.errorMessage = error.message;
       } else {
         this.user = data.user;
       }
-
-      this.loading = false;
     },
 
     async signOut() {
