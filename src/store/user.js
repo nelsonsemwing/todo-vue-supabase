@@ -23,6 +23,7 @@ export const useUserStore = defineStore("user", {
 
       if (error) {
         this.errorMessage = error.message;
+        this.user = null;
       } else {
         this.user = data.user;
       }
@@ -31,27 +32,53 @@ export const useUserStore = defineStore("user", {
     },
 
     async signIn(email, password) {
-      const { data, error } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      this.loading = true;
+      this.errorMessage = "";
+
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        this.errorMessage = error.message;
+        this.user = null;
+      } else {
+        this.user = data.user;
+      }
+
+      this.loading = false;
+    },
+
+    async signOut() {
+      this.loading = true;
+      this.errorMessage = "";
+
+      const { error } = await supabase.auth.signOut();
 
       if (error) {
         this.errorMessage = error.message;
       } else {
-        this.user = data.user;
+        this.user = null;
       }
-    },
 
-    async signOut() {
-      await supabase.auth.signOut();
-      this.user = null;
+      this.loading = false;
     },
 
     async getUser() {
-      const { data } = await supabase.auth.getUser();
-      this.user = data.user;
+      this.loading = true;
+      this.errorMessage = "";
+
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error) {
+        this.errorMessage = error.message;
+        this.user = null;
+      } else {
+        this.user = data.user;
+      }
+
+      this.loading = false;
     },
   },
 });
