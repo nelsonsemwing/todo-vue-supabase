@@ -8,6 +8,7 @@ const userStore = useUserStore();
 
 const email = ref("");
 const password = ref("");
+const rememberMe = ref(false);
 const localError = ref("");
 
 const handleSignIn = async () => {
@@ -33,51 +34,126 @@ const handleSignIn = async () => {
 </script>
 
 <template>
-  <v-card class="auth-card" elevation="4">
-    <h2>Log In</h2>
+  <v-card class="signin-card" elevation="10">
+    <div class="card-head">
+      <h2>Welcome back</h2>
+      <span>Sign in</span>
+    </div>
 
-    <v-text-field
-      v-model="email"
-      label="Email"
-      type="email"
-      variant="outlined"
-    />
+    <v-form @submit.prevent="handleSignIn">
+      <label class="field-label">Email</label>
+      <v-text-field
+        v-model="email"
+        type="email"
+        placeholder="you@todolist.app"
+        variant="outlined"
+        density="comfortable"
+        prepend-inner-icon="mdi-email-outline"
+        hide-details
+        class="mb-4"
+      />
 
-    <v-text-field
-      v-model="password"
-      label="Password"
-      type="password"
-      variant="outlined"
-    />
+      <label class="field-label">Password</label>
+      <v-text-field
+        v-model="password"
+        type="password"
+        placeholder="••••••••"
+        variant="outlined"
+        density="comfortable"
+        prepend-inner-icon="mdi-lock-outline"
+        hide-details
+        class="mb-3"
+      />
 
-    <v-btn
-      color="primary"
-      block
-      size="large"
-      :loading="userStore.loading"
-      @click="handleSignIn"
-    >
-      Log In
-    </v-btn>
+      <div class="signin-options">
+        <v-checkbox
+          v-model="rememberMe"
+          label="Remember me"
+          hide-details
+          density="compact"
+        />
 
-    <p v-if="localError" class="error-message">
-      {{ localError }}
-    </p>
+        <a href="#">Forgot password?</a>
+      </div>
 
-    <p v-if="userStore.errorMessage" class="error-message">
-      {{ userStore.errorMessage }}
-    </p>
+      <v-btn
+        type="submit"
+        block
+        size="large"
+        class="signin-btn"
+        :loading="userStore.loading"
+      >
+        Sign in
+        <v-icon end>mdi-arrow-right</v-icon>
+      </v-btn>
+
+      <p v-if="localError" class="error-message">
+        {{ localError }}
+      </p>
+
+      <p v-if="userStore.errorMessage" class="error-message">
+        {{ userStore.errorMessage }}
+      </p>
+    </v-form>
   </v-card>
 </template>
 
 <style scoped>
-.auth-card {
+.signin-card {
   padding: 28px;
-  border-radius: 16px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #1a3a5c;
 }
 
-h2 {
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
   margin-bottom: 24px;
+}
+
+.card-head h2 {
+  font-size: 28px;
+  color: #1a3a5c;
+}
+
+.card-head span {
+  font-size: 13px;
+  color: #777;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-weight: 700;
+  color: #777;
+}
+
+.signin-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.signin-options a {
+  font-size: 13px;
+  color: #2b5f8a;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.signin-btn {
+  height: 52px;
+  border-radius: 14px;
+  background: #1a3a5c;
+  color: white;
+  text-transform: none;
+  font-weight: 800;
 }
 
 .error-message {

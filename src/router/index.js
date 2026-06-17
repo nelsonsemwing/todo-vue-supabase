@@ -8,13 +8,25 @@ const routes = [
     path: "/",
     redirect: "/auth",
   },
+
   {
     path: "/auth",
     component: Auth,
   },
+
+  {
+    path: "/login",
+    redirect: "/auth",
+  },
+
   {
     path: "/dashboard",
     component: Dashboard,
+  },
+
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/auth",
   },
 ];
 
